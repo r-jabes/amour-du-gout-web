@@ -59,6 +59,7 @@ Filenames and extensions must match the filesystem (some heroes are `.webp`).
 - Menu products and prices are **demonstration content** until the owner confirms the official menu.
 - Contact phone/address are observed from Instagram and marked pending verification.
 - Do not invent opening hours, testimonials, or business history.
+
 - Admin / inventory / stock features are out of scope for this app phase.
 
 ## Documentation
