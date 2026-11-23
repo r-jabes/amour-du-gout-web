@@ -1,7 +1,5 @@
-import { editorialAssets, heroAssets } from "@/lib/assets";
+import { heroAssets } from "@/lib/assets";
 import type { DemoCategoryId } from "@/content/demo-catalogue";
-
-export type StoryAccent = "cream" | "sand" | "blush" | "charcoal" | "cocoa";
 
 export type FloatingCardContent = {
   label: string;
@@ -14,6 +12,8 @@ export type StoryChapter = {
   index: number;
   categoryId: DemoCategoryId | "desserts-drinks";
   categoryLabel: string;
+  /** Short label for the bottom category strip */
+  navLabel: string;
   headline: string;
   description: string;
   ctaLabel: string;
@@ -23,9 +23,11 @@ export type StoryChapter = {
   heroOrientation: "landscape" | "portrait";
   secondaryHeroSrc?: string;
   secondaryHeroAlt?: string;
-  editorialSrc: string;
-  editorialAlt: string;
-  accent: StoryAccent;
+  /** Full-bleed stage colour — monochromatic field behind the product */
+  background: string;
+  /** Softer centre glow for the radial studio wash */
+  glow: string;
+  textTone: "dark" | "light";
   cards: FloatingCardContent[];
 };
 
@@ -35,17 +37,19 @@ export const storyChapters: StoryChapter[] = [
     index: 1,
     categoryId: "fresh-bakes",
     categoryLabel: "Fresh Bakes",
+    navLabel: "Croissant",
     headline: "Layers of Love",
     description:
-      "Golden folds, quiet warmth, and the kind of bakery moment that slows the day.",
-    ctaLabel: "Explore Fresh Bakes",
+      "Freshly baked moments, crafted to make every bite feel special — a warm bakery and café story from Kigali.",
+    ctaLabel: "Explore Our Menu",
     ctaHref: "/menu",
     heroSrc: heroAssets.croissantMain,
-    heroAlt: "Golden croissant with transparent background — illustrative prototype imagery",
+    heroAlt:
+      "Golden croissant with transparent background — illustrative prototype imagery",
     heroOrientation: "landscape",
-    editorialSrc: editorialAssets.croissantTable,
-    editorialAlt: "Croissant on a ceramic plate with coffee — illustrative editorial photography",
-    accent: "cream",
+    background: "#E9D5C0",
+    glow: "#F7EADF",
+    textTone: "dark",
     cards: [
       {
         label: "Illustrative",
@@ -64,17 +68,19 @@ export const storyChapters: StoryChapter[] = [
     index: 2,
     categoryId: "cakes",
     categoryLabel: "Cakes",
+    navLabel: "Cakes",
     headline: "Made for Celebrations",
     description:
       "Fruit, cream, and soft celebration energy — cakes that make a table feel complete.",
     ctaLabel: "Browse Cakes",
     ctaHref: "/menu",
     heroSrc: heroAssets.strawberryCake,
-    heroAlt: "Strawberry celebration cake with transparent background — illustrative prototype imagery",
+    heroAlt:
+      "Strawberry celebration cake with transparent background — illustrative prototype imagery",
     heroOrientation: "landscape",
-    editorialSrc: editorialAssets.celebrationCake,
-    editorialAlt: "Celebration cake with strawberries — illustrative editorial photography",
-    accent: "blush",
+    background: "#E4B8B4",
+    glow: "#F3D9D5",
+    textTone: "dark",
     cards: [
       {
         label: "Illustrative",
@@ -93,17 +99,19 @@ export const storyChapters: StoryChapter[] = [
     index: 3,
     categoryId: "fresh-bakes",
     categoryLabel: "Fresh Bakes",
+    navLabel: "Pastries",
     headline: "Fresh From the Oven",
     description:
       "Pastries with colour, texture, and that irresistible just-baked glow.",
     ctaLabel: "See Fresh Bakes",
     ctaHref: "/menu",
     heroSrc: heroAssets.assortedPastries,
-    heroAlt: "Assorted pastries with transparent background — illustrative prototype imagery",
+    heroAlt:
+      "Assorted pastries with transparent background — illustrative prototype imagery",
     heroOrientation: "landscape",
-    editorialSrc: editorialAssets.pastrySelection,
-    editorialAlt: "Assorted pastries in natural light — illustrative editorial photography",
-    accent: "sand",
+    background: "#E7C9A4",
+    glow: "#F5E2CB",
+    textTone: "dark",
     cards: [
       {
         label: "Illustrative",
@@ -122,17 +130,19 @@ export const storyChapters: StoryChapter[] = [
     index: 4,
     categoryId: "breakfast",
     categoryLabel: "Breakfast",
+    navLabel: "Breakfast",
     headline: "A Beautiful Way to Begin",
     description:
       "Plates meant for unhurried mornings — eggs, toast, fruit, and café comfort.",
     ctaLabel: "Discover Breakfast",
     ctaHref: "/menu",
     heroSrc: heroAssets.breakfastPlatter,
-    heroAlt: "Breakfast platter with transparent background — illustrative prototype imagery",
+    heroAlt:
+      "Breakfast platter with transparent background — illustrative prototype imagery",
     heroOrientation: "landscape",
-    editorialSrc: editorialAssets.breakfastSpread,
-    editorialAlt: "Breakfast spread with eggs and fruit — illustrative editorial photography",
-    accent: "cream",
+    background: "#E6D4A8",
+    glow: "#F4EBD0",
+    textTone: "dark",
     cards: [
       {
         label: "Illustrative",
@@ -151,17 +161,19 @@ export const storyChapters: StoryChapter[] = [
     index: 5,
     categoryId: "burgers-and-bites",
     categoryLabel: "Burgers & Bites",
+    navLabel: "Burgers",
     headline: "Something Worth Craving",
     description:
       "Stacked, savoury, and deeply satisfying — food for when appetite takes the lead.",
     ctaLabel: "View Burgers & Bites",
     ctaHref: "/menu",
     heroSrc: heroAssets.gourmetBurger,
-    heroAlt: "Gourmet burger with transparent background — illustrative prototype imagery",
+    heroAlt:
+      "Gourmet burger with transparent background — illustrative prototype imagery",
     heroOrientation: "landscape",
-    editorialSrc: editorialAssets.gourmetBurger,
-    editorialAlt: "Gourmet burger with fries — illustrative editorial photography",
-    accent: "cocoa",
+    background: "#C9A88A",
+    glow: "#E2CDB8",
+    textTone: "dark",
     cards: [
       {
         label: "Illustrative",
@@ -180,17 +192,19 @@ export const storyChapters: StoryChapter[] = [
     index: 6,
     categoryId: "lunch",
     categoryLabel: "Lunch",
+    navLabel: "Lunch",
     headline: "Gather Around the Table",
     description:
       "Generous plates and sharing energy — lunch that invites people closer.",
     ctaLabel: "Explore Lunch",
     ctaHref: "/menu",
     heroSrc: heroAssets.lunchPlatter,
-    heroAlt: "Lunch platter with transparent background — illustrative prototype imagery",
+    heroAlt:
+      "Lunch platter with transparent background — illustrative prototype imagery",
     heroOrientation: "landscape",
-    editorialSrc: editorialAssets.lunchPlatter,
-    editorialAlt: "Lunch platter with sandwich and fries — illustrative editorial photography",
-    accent: "sand",
+    background: "#D2C2A8",
+    glow: "#E8DDCC",
+    textTone: "dark",
     cards: [
       {
         label: "Illustrative",
@@ -209,20 +223,22 @@ export const storyChapters: StoryChapter[] = [
     index: 7,
     categoryId: "desserts-drinks",
     categoryLabel: "Desserts & Drinks",
+    navLabel: "Sweets",
     headline: "A Little Something Sweet",
     description:
       "Soft dessert finishes and chilled café pours — the last note worth lingering on.",
     ctaLabel: "Find Desserts & Drinks",
     ctaHref: "/menu",
     heroSrc: heroAssets.cheesecakeSlice,
-    heroAlt: "Cheesecake slice with transparent background — illustrative prototype imagery",
+    heroAlt:
+      "Cheesecake slice with transparent background — illustrative prototype imagery",
     heroOrientation: "landscape",
     secondaryHeroSrc: heroAssets.icedCoffee,
     secondaryHeroAlt:
       "Iced coffee with transparent background — illustrative prototype imagery",
-    editorialSrc: editorialAssets.coffeeMoment,
-    editorialAlt: "Iced coffee and croissant on a wooden table — illustrative editorial photography",
-    accent: "charcoal",
+    background: "#B89A92",
+    glow: "#D4BDB7",
+    textTone: "dark",
     cards: [
       {
         label: "Illustrative",

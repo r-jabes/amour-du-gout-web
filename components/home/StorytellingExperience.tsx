@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -11,20 +10,13 @@ import {
   type CSSProperties,
 } from "react";
 import { Button } from "@/components/ui/Button";
+import { site } from "@/content/site";
 import { storyChapters } from "@/content/home-story";
+import { CategoryStrip } from "./CategoryStrip";
 import { ChapterProduct } from "./ChapterProduct";
-import { ChapterProgress } from "./ChapterProgress";
 import { FloatingCard } from "./FloatingCard";
 import { StoryChapter } from "./StoryChapter";
 import styles from "./StorytellingExperience.module.css";
-
-const accentClass = {
-  cream: styles.accentCream,
-  sand: styles.accentSand,
-  blush: styles.accentBlush,
-  cocoa: styles.accentCocoa,
-  charcoal: styles.accentCharcoal,
-} as const;
 
 function usePinnedStoryMode() {
   const [pinned, setPinned] = useState(false);
@@ -57,7 +49,7 @@ export function StorytellingExperience() {
   const sentinelRefs = useRef<Array<HTMLDivElement | null>>([]);
   const copyKey = useId();
   const active = storyChapters[activeIndex] ?? storyChapters[0];
-  const inverse = active.accent === "charcoal";
+  const isOpening = activeIndex === 0;
 
   useEffect(() => {
     if (!pinned) return;
@@ -101,25 +93,46 @@ export function StorytellingExperience() {
     return () => observer.disconnect();
   }, [pinned]);
 
-  const scrollToChapter = useCallback((index: number) => {
-    const node = sentinelRefs.current[index];
-    if (!node) return;
-    node.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
+  const goToChapter = useCallback(
+    (index: number) => {
+      if (!pinned) {
+        const id = storyChapters[index]?.id;
+        if (!id) return;
+        document
+          .getElementById(`chapter-${id}`)
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+
+      const node = sentinelRefs.current[index];
+      if (!node) return;
+      node.scrollIntoView({ behavior: "smooth", block: "center" });
+    },
+    [pinned],
+  );
 
   if (!pinned) {
     return (
-      <div id="storytelling" className={styles.stacked}>
-        {storyChapters.map((chapter) => (
-          <StoryChapter key={chapter.id} chapter={chapter} />
+      <div id="home-hero" className={styles.stacked}>
+        {storyChapters.map((chapter, index) => (
+          <StoryChapter
+            key={chapter.id}
+            chapter={chapter}
+            isOpening={index === 0}
+            chapters={storyChapters}
+            activeIndex={index}
+            onSelectChapter={goToChapter}
+          />
         ))}
       </div>
     );
   }
 
+  const HeadingTag = isOpening ? "h1" : "h2";
+
   return (
     <section
-      id="storytelling"
+      id="home-hero"
       className={styles.experience}
       style={
         {
@@ -127,72 +140,80 @@ export function StorytellingExperience() {
         } as CSSProperties
       }
       aria-roledescription="carousel"
-      aria-label="Amour du Goût storytelling chapters"
+      aria-label="Amour du Goût immersive menu story"
     >
       <div className={styles.sticky}>
         <div
-          className={[styles.stage, accentClass[active.accent]].join(" ")}
+          className={styles.stage}
+          style={
+            {
+              "--stage-bg": active.background,
+              "--stage-glow": active.glow,
+            } as CSSProperties
+          }
           aria-live="polite"
         >
-          <div className={styles.editorialWash} aria-hidden>
-            <Image
-              key={active.editorialSrc}
-              src={active.editorialSrc}
-              alt=""
-              fill
-              sizes="40vw"
-            />
-          </div>
+          <div className={styles.atmosphere} aria-hidden />
+          <div className={styles.ring} aria-hidden />
 
-          <div className={styles.copy}>
-            <div className={styles.progressWrap}>
-              <ChapterProgress
+          <div className={styles.layout}>
+            <div className={styles.copy}>
+              <div key={`${copyKey}-${active.id}`} className={styles.fadeCopy}>
+                {isOpening ? (
+                  <>
+                    <p className={styles.brand}>
+                      <span className={styles.brandMark} aria-hidden />
+                      {site.name}
+                    </p>
+                    <p className={styles.tagline}>{site.tagline}</p>
+                  </>
+                ) : (
+                  <p className={styles.meta}>
+                    {String(active.index).padStart(2, "0")} ·{" "}
+                    {active.categoryLabel}
+                  </p>
+                )}
+
+                <HeadingTag
+                  id={isOpening ? "home-hero-heading" : undefined}
+                  className={styles.headline}
+                >
+                  {active.headline}
+                </HeadingTag>
+                <p className={styles.description}>{active.description}</p>
+                <div className={styles.actions}>
+                  <Button href={active.ctaHref} variant="primary">
+                    {active.ctaLabel}
+                  </Button>
+                  <Button href="/menu" variant="secondary">
+                    Full Menu
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.visualColumn}>
+              <ChapterProduct
                 chapters={storyChapters}
                 activeIndex={activeIndex}
-                tone={inverse ? "inverse" : "default"}
-                onSelect={scrollToChapter}
+                priorityFirst
               />
-            </div>
-
-            <div key={`${copyKey}-${active.id}`} className={styles.fadeCopy}>
-              <p className={styles.meta}>
-                {String(active.index).padStart(2, "0")} · {active.categoryLabel}
-              </p>
-              <h2 className={styles.headline}>{active.headline}</h2>
-              <p className={styles.description}>{active.description}</p>
-              <div className={styles.actions}>
-                <Button href={active.ctaHref} variant="primary">
-                  {active.ctaLabel}
-                </Button>
-                <Button
-                  href="/menu"
-                  variant={inverse ? "inverse" : "secondary"}
-                >
-                  Full Menu
-                </Button>
+              <div className={styles.floatCards}>
+                <div className={styles.cardA}>
+                  <FloatingCard card={active.cards[0]} />
+                </div>
+                <div className={styles.cardB}>
+                  <FloatingCard card={active.cards[1]} />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className={styles.visualColumn}>
-            <ChapterProduct
-              chapters={storyChapters}
-              activeIndex={activeIndex}
-              priorityFirst
-            />
-            <div className={styles.cards}>
-              <div className={styles.cardA}>
-                <FloatingCard
-                  card={active.cards[0]}
-                  tone={inverse ? "inverse" : "default"}
-                />
-              </div>
-              <div className={styles.cardB}>
-                <FloatingCard
-                  card={active.cards[1]}
-                  tone={inverse ? "inverse" : "default"}
-                />
-              </div>
+            <div className={styles.stripWrap}>
+              <CategoryStrip
+                chapters={storyChapters}
+                activeIndex={activeIndex}
+                onSelect={goToChapter}
+              />
             </div>
           </div>
         </div>
