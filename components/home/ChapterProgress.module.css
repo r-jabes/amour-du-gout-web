@@ -1,0 +1,84 @@
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  align-items: flex-start;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: color-mix(in srgb, var(--color-charcoal) 45%, transparent);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  transition: color var(--duration-base) var(--ease-out);
+}
+
+.item:hover {
+  color: var(--color-charcoal);
+}
+
+.dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+  transition: transform var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out);
+}
+
+.active {
+  color: var(--color-orange);
+}
+
+.active .dot {
+  transform: scale(1.35);
+  background: var(--color-orange);
+}
+
+.label {
+  opacity: 0;
+  transform: translateX(-0.25rem);
+  transition: opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.active .label,
+.item:hover .label,
+.item:focus-visible .label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.inverse .item {
+  color: color-mix(in srgb, var(--color-cream) 45%, transparent);
+}
+
+.inverse .item:hover,
+.inverse .active {
+  color: var(--color-orange);
+}
+
+@media (max-width: 899px) {
+  .progress {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .label {
+    display: none;
+  }
+
+  .item {
+    padding: 0.35rem;
+  }
+}

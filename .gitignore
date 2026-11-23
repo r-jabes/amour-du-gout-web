@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+.tmp-screens/
 
 # debug
 npm-debug.log*

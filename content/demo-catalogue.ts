@@ -94,5 +94,58 @@ export const demoCategories: DemoCategory[] = [
   },
 ];
 
-/** Placeholder products — Phase 3 will flesh out browsing UI. */
-export const demoProducts: DemoProduct[] = [];
+/** Illustrative products for homepage featured section and later menu UI. */
+export const demoProducts: DemoProduct[] = [
+  {
+    id: "demo-croissant",
+    categoryId: "fresh-bakes",
+    name: "Butter Croissant",
+    description: "Golden, flaky layers with a soft centre.",
+    image: "/assets/editorial/editorial-croissant-table.png",
+    demo: true,
+  },
+  {
+    id: "demo-strawberry-cake",
+    categoryId: "cakes",
+    name: "Strawberry Celebration Cake",
+    description: "Cream, fresh fruit, and a soft celebration finish.",
+    image: "/assets/editorial/editorial-celebration-cake.png",
+    demo: true,
+  },
+  {
+    id: "demo-breakfast",
+    categoryId: "breakfast",
+    name: "Breakfast Platter",
+    description: "A generous morning plate with café comfort.",
+    image: "/assets/editorial/editorial-breakfast-spread.png",
+    demo: true,
+  },
+  {
+    id: "demo-burger",
+    categoryId: "burgers-and-bites",
+    name: "Gourmet Burger",
+    description: "Stacked, savoury, and deeply satisfying.",
+    image: "/assets/editorial/editorial-gourmet-burger.png",
+    demo: true,
+  },
+  {
+    id: "demo-lunch",
+    categoryId: "lunch",
+    name: "Lunch Platter",
+    description: "A composed plate made for midday gathering.",
+    image: "/assets/editorial/editorial-lunch-platter.png",
+    demo: true,
+  },
+  {
+    id: "demo-cheesecake",
+    categoryId: "desserts",
+    name: "Cheesecake Slice",
+    description: "Creamy dessert with a bright fruit finish.",
+    image: "/assets/editorial/editorial-cheesecake-dessert.png",
+    demo: true,
+  },
+];
+
+export function getCategoryLabel(categoryId: DemoCategoryId) {
+  return demoCategories.find((category) => category.id === categoryId)?.label ?? categoryId;
+}

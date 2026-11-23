@@ -1,0 +1,125 @@
+.chapter {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--space-8) var(--gutter);
+  min-height: auto;
+}
+
+.inner {
+  width: min(100%, var(--container-wide));
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .inner {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: center;
+  }
+}
+
+.meta {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: var(--space-3);
+}
+
+.headline {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-4);
+  max-width: 12ch;
+}
+
+.description {
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-5);
+  max-width: 36ch;
+}
+
+.visual {
+  position: relative;
+  min-height: 18rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.editorial {
+  object-fit: cover;
+  opacity: 0.35;
+  filter: saturate(0.9);
+}
+
+.product {
+  position: absolute;
+  inset: 8%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 30px color-mix(in srgb, var(--color-charcoal) 25%, transparent));
+}
+
+.secondary {
+  inset: auto 6% 8% auto;
+  width: 32%;
+  height: 55%;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 22px color-mix(in srgb, var(--color-charcoal) 28%, transparent));
+  transform: rotate(-4deg);
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.accentCream {
+  background: linear-gradient(160deg, var(--color-cream-soft), var(--color-cream));
+  color: var(--color-charcoal);
+}
+
+.accentSand {
+  background: linear-gradient(160deg, var(--color-cream), color-mix(in srgb, var(--color-sand) 70%, white));
+  color: var(--color-charcoal);
+}
+
+.accentBlush {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-cream-soft) 80%, #f3d4c8),
+    var(--color-cream)
+  );
+  color: var(--color-charcoal);
+}
+
+.accentCocoa {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-cream) 70%, var(--color-brown)),
+    var(--color-cream)
+  );
+  color: var(--color-charcoal);
+}
+
+.accentCharcoal {
+  background: linear-gradient(160deg, #221f1c, var(--color-charcoal));
+  color: var(--color-cream-soft);
+}
+
+.accentCharcoal .meta {
+  color: var(--color-orange);
+}
+
+.accentCharcoal .description {
+  color: color-mix(in srgb, var(--color-cream) 72%, transparent);
+}
+
+.accentCharcoal .headline {
+  color: var(--color-cream-soft);
+}
