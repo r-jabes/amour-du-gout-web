@@ -1,6 +1,8 @@
 .experience {
   position: relative;
   height: calc(var(--chapter-count) * 100vh);
+  /* Slide under the sticky header so the full stage (incl. dock) is visible on load. */
+  margin-top: calc(var(--header-height) * -1);
 }
 
 .sticky {
@@ -10,19 +12,6 @@
   overflow: hidden;
   isolation: isolate;
   z-index: 1;
-}
-
-.sentinels {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  pointer-events: none;
-}
-
-.sentinel {
-  flex: 1 0 0;
-  min-height: 100vh;
 }
 
 .stage {
@@ -48,9 +37,7 @@
       transparent 60%
     ),
     linear-gradient(180deg, color-mix(in srgb, white 28%, var(--hero-bg)), var(--hero-bg) 42%, color-mix(in srgb, var(--color-charcoal) 8%, var(--hero-bg)));
-  transition:
-    --hero-bg 720ms var(--ease-out),
-    --hero-glow 720ms var(--ease-out);
+  /* No transition: --hero-bg is driven per frame by scroll position. */
 }
 
 .layout {
@@ -69,6 +56,8 @@
 }
 
 .copy {
+  position: relative;
+  z-index: 3;
   max-width: 28rem;
   min-width: 0;
   align-self: center;
@@ -132,60 +121,84 @@
   gap: var(--space-3);
 }
 
-.fadeCopy {
-  animation: copyNext 680ms var(--ease-out) both;
+/*
+ * Scroll-linked copy: drifts up and fades out as you scroll away from a
+ * chapter, then the next chapter's copy rises in from below. The swap
+ * happens at the midpoint, where opacity is 0, so it is never seen.
+ */
+.scrollCopy {
+  --dist: max(var(--local, 0), calc(var(--local, 0) * -1));
+  opacity: calc(1 - max(0, var(--dist) - 0.1) * 2.5);
+  transform: translate3d(0, calc(var(--local, 0) * -4rem), 0);
+  will-change: transform, opacity;
 }
 
-.fadePrev {
-  animation-name: copyPrev;
+.floatCards.scrollCopy {
+  transform: translate3d(0, calc(var(--local, 0) * -9rem), 0);
 }
 
-.fadeNext p,
-.fadeNext h1,
-.fadeNext h2,
-.fadePrev p,
-.fadePrev h1,
-.fadePrev h2 {
-  animation: rise 680ms var(--ease-out) both;
+.dockHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-inline: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
-.fadeCopy .actions {
-  animation: rise 680ms var(--ease-out) 80ms both;
+.step {
+  margin-right: 0.6rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-orange);
 }
 
-@keyframes copyNext {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.skip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: none;
+  min-height: 1.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.68rem;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-brown);
+  transition: background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
 }
 
-@keyframes copyPrev {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.skip:hover {
+  background: color-mix(in srgb, var(--color-white) 70%, transparent);
+  color: var(--color-charcoal);
 }
 
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(0.7rem);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.progress {
+  height: 2px;
+  margin: 0 0.6rem 0.6rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-charcoal) 10%, transparent);
+  overflow: hidden;
+}
+
+.progressBar {
+  display: block;
+  height: 100%;
+  background: var(--color-orange);
+  transform-origin: left center;
+  transform: scaleX(
+    calc((var(--story-progress, 0) + 1) / var(--chapter-count))
+  );
 }
 
 .hint {
-  margin: 0 0 0.55rem;
-  padding-inline: 0.35rem;
-  text-align: center;
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
   font-size: 0.68rem;
   font-weight: var(--weight-semibold);
   letter-spacing: 0.08em;
@@ -259,6 +272,8 @@
 }
 
 .stripWrap {
+  position: relative;
+  z-index: 5;
   grid-column: 1 / -1;
   min-width: 0;
   max-width: 100%;
@@ -282,19 +297,6 @@
 
 .stacked {
   display: grid;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fadeCopy,
-  .fadeNext p,
-  .fadeNext h1,
-  .fadeNext h2,
-  .fadePrev p,
-  .fadePrev h1,
-  .fadePrev h2,
-  .fadeCopy .actions {
-    animation: none;
-  }
 }
 
 @media (max-width: 1079px) {
@@ -361,6 +363,11 @@
 }
 
 @media (max-width: 720px) {
+  /* Floating cards cover the product on small screens; let the food speak. */
+  .floatCards {
+    display: none;
+  }
+
   .headline {
     font-size: clamp(1.7rem, 8vw, 2.35rem);
   }

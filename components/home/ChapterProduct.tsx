@@ -1,24 +1,26 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import type { StoryChapter } from "@/content/home-story";
 import styles from "./ChapterProduct.module.css";
 
 type ChapterProductProps = {
   chapters: StoryChapter[];
   activeIndex: number;
-  direction?: "next" | "prev";
   priorityFirst?: boolean;
 };
 
+/**
+ * A vertical reel of chapter products. Each item is positioned from its
+ * distance to `--story-progress` (set by StorytellingExperience on scroll),
+ * so products travel upward with the scrollbar rather than swapping in place.
+ */
 export function ChapterProduct({
   chapters,
   activeIndex,
-  direction = "next",
   priorityFirst = false,
 }: ChapterProductProps) {
-  const active = chapters[activeIndex];
-
   return (
-    <div className={styles.stage} aria-hidden={false}>
+    <div className={styles.stage}>
       {chapters.map((chapter, index) => {
         const isActive = index === activeIndex;
         return (
@@ -31,6 +33,7 @@ export function ChapterProduct({
             ]
               .filter(Boolean)
               .join(" ")}
+            style={{ "--i": index } as CSSProperties}
             aria-hidden={!isActive}
           >
             <Image
@@ -39,27 +42,22 @@ export function ChapterProduct({
               fill
               sizes="(max-width: 899px) 90vw, 48vw"
               className={styles.image}
-              priority={priorityFirst && index === 0}
+              priority={priorityFirst && index <= 1}
             />
+            {chapter.secondaryHeroSrc ? (
+              <div className={styles.secondary}>
+                <Image
+                  src={chapter.secondaryHeroSrc}
+                  alt={isActive ? (chapter.secondaryHeroAlt ?? "") : ""}
+                  fill
+                  sizes="180px"
+                  className={styles.image}
+                />
+              </div>
+            ) : null}
           </div>
         );
       })}
-
-      {active?.secondaryHeroSrc ? (
-        <div
-          className={[styles.product, styles.secondary, styles.active]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          <Image
-            src={active.secondaryHeroSrc}
-            alt={active.secondaryHeroAlt ?? ""}
-            fill
-            sizes="180px"
-            className={styles.image}
-          />
-        </div>
-      ) : null}
     </div>
   );
 }

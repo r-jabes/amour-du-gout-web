@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
@@ -13,7 +14,11 @@ export function FeaturedMenu() {
   const featured = demoProducts.slice(0, 6);
 
   return (
-    <section className={styles.section} aria-labelledby="featured-menu-heading">
+    <section
+      id="featured-menu"
+      className={styles.section}
+      aria-labelledby="featured-menu-heading"
+    >
       <Container>
         <Reveal>
           <header className={styles.header}>
@@ -44,7 +49,14 @@ export function FeaturedMenu() {
               <p className={styles.category}>
                 {getCategoryLabel(product.categoryId)}
               </p>
-              <h3 className={styles.name}>{product.name}</h3>
+              <h3 className={styles.name}>
+                <Link
+                  href={`/menu#${product.categoryId}`}
+                  className={styles.cardLink}
+                >
+                  {product.name}
+                </Link>
+              </h3>
               <p className={styles.description}>{product.description}</p>
               <p className={styles.badge}>Illustrative example</p>
             </article>

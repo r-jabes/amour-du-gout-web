@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type KeyboardEvent } from "react";
 import type { StoryChapter } from "@/content/home-story";
 import styles from "./CategoryStrip.module.css";
 
@@ -27,9 +27,27 @@ export function CategoryStrip({
     strip.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
   }, [activeIndex]);
 
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const last = chapters.length - 1;
+    const keyMap: Record<string, number> = {
+      ArrowRight: Math.min(last, activeIndex + 1),
+      ArrowLeft: Math.max(0, activeIndex - 1),
+      Home: 0,
+      End: last,
+    };
+    const next = keyMap[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    onSelect(next);
+    stripRef.current
+      ?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
+      [next]?.focus();
+  };
+
   return (
     <div
       ref={stripRef}
+      onKeyDown={onKeyDown}
       className={styles.strip}
       role="tablist"
       aria-label="Category chapters"
@@ -42,6 +60,7 @@ export function CategoryStrip({
             type="button"
             role="tab"
             aria-selected={active}
+            tabIndex={active ? 0 : -1}
             className={[styles.card, active ? styles.active : ""]
               .filter(Boolean)
               .join(" ")}
