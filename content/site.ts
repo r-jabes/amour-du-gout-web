@@ -15,6 +15,8 @@ export const site = {
     phoneHref: "tel:+250788231434",
     whatsappHref: "https://wa.me/250788231434",
     addressLines: ["KG 628 St", "Kigali, Rwanda"],
+    mapsHref:
+      "https://www.google.com/maps/search/?api=1&query=Amour+du+Go%C3%BBt+KG+628+St+Kigali",
     /** Observed from Instagram; confirm with the owner before production. */
     verificationStatus: "pending-owner-confirmation" as const,
   },
@@ -29,5 +31,11 @@ export const site = {
     { href: "/contact", label: "Contact" },
   ] as const,
 } as const;
+
+/** WhatsApp deep link with an optional prefilled message. */
+export function whatsappLink(message?: string) {
+  if (!message) return site.contact.whatsappHref;
+  return `${site.contact.whatsappHref}?text=${encodeURIComponent(message)}`;
+}
 
 export type NavItem = (typeof site.navigation)[number];

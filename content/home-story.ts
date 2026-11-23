@@ -73,7 +73,7 @@ export const storyChapters: StoryChapter[] = [
     description:
       "Fruit, cream, and soft celebration energy — cakes that make a table feel complete.",
     ctaLabel: "Browse Cakes",
-    ctaHref: "/menu",
+    ctaHref: "/menu#cakes",
     heroSrc: heroAssets.strawberryCake,
     heroAlt:
       "Strawberry celebration cake with transparent background — illustrative prototype imagery",
@@ -104,7 +104,7 @@ export const storyChapters: StoryChapter[] = [
     description:
       "Pastries with colour, texture, and that irresistible just-baked glow.",
     ctaLabel: "See Fresh Bakes",
-    ctaHref: "/menu",
+    ctaHref: "/menu#fresh-bakes",
     heroSrc: heroAssets.assortedPastries,
     heroAlt:
       "Assorted pastries with transparent background — illustrative prototype imagery",
@@ -135,7 +135,7 @@ export const storyChapters: StoryChapter[] = [
     description:
       "Plates meant for unhurried mornings — eggs, toast, fruit, and café comfort.",
     ctaLabel: "Discover Breakfast",
-    ctaHref: "/menu",
+    ctaHref: "/menu#breakfast",
     heroSrc: heroAssets.breakfastPlatter,
     heroAlt:
       "Breakfast platter with transparent background — illustrative prototype imagery",
@@ -166,7 +166,7 @@ export const storyChapters: StoryChapter[] = [
     description:
       "Stacked, savoury, and deeply satisfying — food for when appetite takes the lead.",
     ctaLabel: "View Burgers & Bites",
-    ctaHref: "/menu",
+    ctaHref: "/menu#burgers-and-bites",
     heroSrc: heroAssets.gourmetBurger,
     heroAlt:
       "Gourmet burger with transparent background — illustrative prototype imagery",
@@ -197,7 +197,7 @@ export const storyChapters: StoryChapter[] = [
     description:
       "Generous plates and sharing energy — lunch that invites people closer.",
     ctaLabel: "Explore Lunch",
-    ctaHref: "/menu",
+    ctaHref: "/menu#lunch",
     heroSrc: heroAssets.lunchPlatter,
     heroAlt:
       "Lunch platter with transparent background — illustrative prototype imagery",
@@ -228,7 +228,7 @@ export const storyChapters: StoryChapter[] = [
     description:
       "Soft dessert finishes and chilled café pours — the last note worth lingering on.",
     ctaLabel: "Find Desserts & Drinks",
-    ctaHref: "/menu",
+    ctaHref: "/menu#desserts",
     heroSrc: heroAssets.cheesecakeSlice,
     heroAlt:
       "Cheesecake slice with transparent background — illustrative prototype imagery",
