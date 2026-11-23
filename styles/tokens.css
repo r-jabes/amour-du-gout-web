@@ -3,6 +3,18 @@
  * Source: doc/02-BRAND-IDENTITY.md
  */
 
+@property --hero-bg {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #e9d5c0;
+}
+
+@property --hero-glow {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f7eadf;
+}
+
 :root {
   /* Colour — primary */
   --color-orange: #e98b32;

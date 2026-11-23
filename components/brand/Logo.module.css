@@ -41,7 +41,7 @@
   font-size: 0.65rem;
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: color-mix(in srgb, var(--color-charcoal) 72%, transparent);
 }
 
 .compact .wordmark {

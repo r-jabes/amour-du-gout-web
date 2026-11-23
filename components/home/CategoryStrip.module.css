@@ -1,21 +1,37 @@
 .strip {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-end;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  width: 100%;
-  max-width: 42rem;
+  gap: 0.85rem;
+  flex-wrap: nowrap;
+  width: max-content;
+  min-width: 0;
+  max-width: 100%;
   margin-inline: auto;
-  padding: 0.35rem;
+  padding: 0.1rem 0.15rem 0.05rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 1.1rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.strip::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .card {
   position: relative;
   display: grid;
   justify-items: center;
-  gap: 0.4rem;
-  width: 4.75rem;
+  gap: 0.35rem;
+  width: max-content;
+  min-width: 4.25rem;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
   padding: 0;
   border: 0;
   background: transparent;
@@ -60,32 +76,29 @@
 
 .label {
   font-size: 0.62rem;
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: color-mix(in srgb, currentColor 70%, transparent);
+  color: color-mix(in srgb, var(--color-charcoal) 82%, transparent);
   text-align: center;
-  max-width: 5.5rem;
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .active .label {
   color: var(--color-orange);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1079px) {
   .strip {
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    max-width: 100%;
-    padding-bottom: 0.5rem;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    padding-inline: 0.35rem;
   }
+}
 
-  .card {
-    flex: 0 0 auto;
-    scroll-snap-align: center;
+@media (max-width: 720px) {
+  .thumb {
+    width: 3.35rem;
+    height: 3.35rem;
   }
 }

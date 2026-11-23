@@ -1,5 +1,7 @@
+"use client";
+
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/content/site";
 import type { StoryChapter as StoryChapterData } from "@/content/home-story";
@@ -23,10 +25,29 @@ export function StoryChapter({
   onSelectChapter,
 }: StoryChapterProps) {
   const HeadingTag = isOpening ? "h1" : "h2";
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+    const root = document.documentElement;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.45) return;
+        root.dataset.hero = "on";
+        root.style.setProperty("--hero-bg", chapter.background);
+        root.style.setProperty("--hero-glow", chapter.glow);
+      },
+      { threshold: [0.45, 0.7] },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [chapter.background, chapter.glow]);
 
   return (
     <section
       id={`chapter-${chapter.id}`}
+      ref={sectionRef}
       className={styles.chapter}
       style={
         {

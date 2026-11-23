@@ -171,8 +171,8 @@ export const storyChapters: StoryChapter[] = [
     heroAlt:
       "Gourmet burger with transparent background — illustrative prototype imagery",
     heroOrientation: "landscape",
-    background: "#C9A88A",
-    glow: "#E2CDB8",
+    background: "#D7BBA4",
+    glow: "#EAD6C6",
     textTone: "dark",
     cards: [
       {
@@ -236,8 +236,8 @@ export const storyChapters: StoryChapter[] = [
     secondaryHeroSrc: heroAssets.icedCoffee,
     secondaryHeroAlt:
       "Iced coffee with transparent background — illustrative prototype imagery",
-    background: "#B89A92",
-    glow: "#D4BDB7",
+    background: "#CDB3AC",
+    glow: "#E4D2CD",
     textTone: "dark",
     cards: [
       {

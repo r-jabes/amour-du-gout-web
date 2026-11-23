@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   useTransition,
@@ -23,20 +24,14 @@ function usePinnedStoryMode() {
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const desktop = window.matchMedia("(min-width: 900px)");
 
     const sync = () => {
-      const next = desktop.matches && !motion.matches;
-      window.requestAnimationFrame(() => setPinned(next));
+      window.requestAnimationFrame(() => setPinned(!motion.matches));
     };
 
     sync();
     motion.addEventListener("change", sync);
-    desktop.addEventListener("change", sync);
-    return () => {
-      motion.removeEventListener("change", sync);
-      desktop.removeEventListener("change", sync);
-    };
+    return () => motion.removeEventListener("change", sync);
   }, []);
 
   return pinned;
@@ -45,11 +40,21 @@ function usePinnedStoryMode() {
 export function StorytellingExperience() {
   const pinned = usePinnedStoryMode();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState<"next" | "prev">("next");
   const [, startTransition] = useTransition();
   const sentinelRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const indexRef = useRef(0);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const copyKey = useId();
   const active = storyChapters[activeIndex] ?? storyChapters[0];
   const isOpening = activeIndex === 0;
+
+  const commitIndex = useCallback((next: number) => {
+    const clamped = Math.max(0, Math.min(storyChapters.length - 1, next));
+    setDirection(clamped >= indexRef.current ? "next" : "prev");
+    indexRef.current = clamped;
+    startTransition(() => setActiveIndex(clamped));
+  }, []);
 
   useEffect(() => {
     if (!pinned) return;
@@ -77,11 +82,7 @@ export function StorytellingExperience() {
           }
         }
 
-        startTransition(() => {
-          setActiveIndex((current) =>
-            current === bestIndex ? current : bestIndex,
-          );
-        });
+        if (bestIndex !== indexRef.current) commitIndex(bestIndex);
       },
       {
         threshold: [0.15, 0.35, 0.55, 0.75],
@@ -91,7 +92,41 @@ export function StorytellingExperience() {
 
     nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
-  }, [pinned]);
+  }, [pinned, commitIndex]);
+
+  useLayoutEffect(() => {
+    if (!pinned) return;
+    const root = document.documentElement;
+    root.dataset.hero = "on";
+    root.style.setProperty("--hero-bg", active.background);
+    root.style.setProperty("--hero-glow", active.glow);
+  }, [pinned, active.background, active.glow]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!pinned) return;
+
+    const node = sectionRef.current;
+    if (!node) {
+      return () => {
+        delete root.dataset.hero;
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) root.dataset.hero = "on";
+        else delete root.dataset.hero;
+      },
+      { threshold: 0.12 },
+    );
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
+      delete root.dataset.hero;
+    };
+  }, [pinned, active.background, active.glow]);
 
   const goToChapter = useCallback(
     (index: number) => {
@@ -133,6 +168,7 @@ export function StorytellingExperience() {
   return (
     <section
       id="home-hero"
+      ref={sectionRef}
       className={styles.experience}
       style={
         {
@@ -154,11 +190,16 @@ export function StorytellingExperience() {
           aria-live="polite"
         >
           <div className={styles.atmosphere} aria-hidden />
-          <div className={styles.ring} aria-hidden />
 
           <div className={styles.layout}>
             <div className={styles.copy}>
-              <div key={`${copyKey}-${active.id}`} className={styles.fadeCopy}>
+              <div
+                key={`${copyKey}-${active.id}`}
+                className={[
+                  styles.fadeCopy,
+                  direction === "prev" ? styles.fadePrev : styles.fadeNext,
+                ].join(" ")}
+              >
                 {isOpening ? (
                   <>
                     <p className={styles.brand}>
@@ -193,9 +234,12 @@ export function StorytellingExperience() {
             </div>
 
             <div className={styles.visualColumn}>
+              <div className={styles.bloom} aria-hidden />
+              <div className={styles.floor} aria-hidden />
               <ChapterProduct
                 chapters={storyChapters}
                 activeIndex={activeIndex}
+                direction={direction}
                 priorityFirst
               />
               <div className={styles.floatCards}>
@@ -209,11 +253,18 @@ export function StorytellingExperience() {
             </div>
 
             <div className={styles.stripWrap}>
-              <CategoryStrip
-                chapters={storyChapters}
-                activeIndex={activeIndex}
-                onSelect={goToChapter}
-              />
+              <div className={styles.dock}>
+                <p className={styles.hint}>
+                  {activeIndex < storyChapters.length - 1
+                    ? `Next · ${storyChapters[activeIndex + 1].headline}`
+                    : "Continue for the menu"}
+                </p>
+                <CategoryStrip
+                  chapters={storyChapters}
+                  activeIndex={activeIndex}
+                  onSelect={goToChapter}
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -5,8 +5,8 @@
 
 .sticky {
   position: sticky;
-  top: var(--header-height);
-  height: calc(100dvh - var(--header-height));
+  top: 0;
+  height: 100dvh;
   overflow: hidden;
   isolation: isolate;
   z-index: 1;
@@ -38,43 +38,39 @@
   z-index: 0;
   background:
     radial-gradient(
-      ellipse 55% 55% at 58% 42%,
-      var(--stage-glow) 0%,
-      transparent 70%
+      ellipse 48% 42% at 64% 46%,
+      color-mix(in srgb, white 62%, var(--hero-glow)) 0%,
+      transparent 68%
     ),
-    var(--stage-bg);
-  transition: background var(--duration-slow) var(--ease-out);
-}
-
-.ring {
-  position: absolute;
-  width: min(52vw, 34rem);
-  height: min(52vw, 34rem);
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--color-charcoal) 10%, transparent);
-  top: 12%;
-  left: 48%;
-  transform: translateX(-10%);
-  z-index: 1;
-  pointer-events: none;
+    radial-gradient(
+      ellipse 70% 40% at 50% 100%,
+      color-mix(in srgb, var(--color-charcoal) 10%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(180deg, color-mix(in srgb, white 28%, var(--hero-bg)), var(--hero-bg) 42%, color-mix(in srgb, var(--color-charcoal) 8%, var(--hero-bg)));
+  transition:
+    --hero-bg 720ms var(--ease-out),
+    --hero-glow 720ms var(--ease-out);
 }
 
 .layout {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(16rem, 0.9fr) minmax(0, 1.2fr);
-  grid-template-rows: 1fr auto;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: clamp(1rem, 3vw, 2.5rem);
   align-items: center;
   width: min(100% - (var(--gutter) * 2), var(--container-wide));
+  max-width: 100%;
   height: 100%;
   margin-inline: auto;
-  padding-block: clamp(1rem, 3vh, 2rem) 1rem;
+  padding-block: calc(var(--header-height) + 1.35rem) 1.15rem;
 }
 
 .copy {
   max-width: 28rem;
+  min-width: 0;
   align-self: center;
 }
 
@@ -102,7 +98,7 @@
   font-size: var(--text-sm);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-charcoal) 55%, transparent);
+  color: color-mix(in srgb, var(--color-charcoal) 78%, transparent);
 }
 
 .meta {
@@ -112,6 +108,7 @@
   text-transform: uppercase;
   color: var(--color-orange);
   margin-bottom: var(--space-3);
+  padding-top: 0.15rem;
 }
 
 .headline {
@@ -124,9 +121,9 @@
 .description {
   font-size: var(--text-md);
   line-height: var(--leading-relaxed);
-  color: color-mix(in srgb, var(--color-charcoal) 68%, transparent);
+  color: color-mix(in srgb, var(--color-charcoal) 86%, transparent);
   margin-bottom: var(--space-5);
-  max-width: 34ch;
+  max-width: 36ch;
 }
 
 .actions {
@@ -136,24 +133,106 @@
 }
 
 .fadeCopy {
-  animation: copyIn var(--duration-slow) var(--ease-out);
+  animation: copyNext 680ms var(--ease-out) both;
 }
 
-@keyframes copyIn {
+.fadePrev {
+  animation-name: copyPrev;
+}
+
+.fadeNext p,
+.fadeNext h1,
+.fadeNext h2,
+.fadePrev p,
+.fadePrev h1,
+.fadePrev h2 {
+  animation: rise 680ms var(--ease-out) both;
+}
+
+.fadeCopy .actions {
+  animation: rise 680ms var(--ease-out) 80ms both;
+}
+
+@keyframes copyNext {
   from {
     opacity: 0;
-    transform: translateY(0.65rem);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
+}
+
+@keyframes copyPrev {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.7rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hint {
+  margin: 0 0 0.55rem;
+  padding-inline: 0.35rem;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--color-charcoal) 72%, transparent);
 }
 
 .visualColumn {
   position: relative;
-  height: min(64vh, 32rem);
+  height: min(58vh, 30rem);
+  width: 100%;
+  min-width: 0;
   align-self: center;
+  justify-self: center;
+}
+
+.bloom {
+  position: absolute;
+  inset: 12% 10% 16%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, white 70%, var(--hero-glow)) 0%,
+    transparent 68%
+  );
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.floor {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  z-index: 0;
+  width: 68%;
+  height: 18%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--color-charcoal) 28%, transparent),
+    transparent 72%
+  );
+  filter: blur(10px);
+  pointer-events: none;
 }
 
 .floatCards {
@@ -170,18 +249,35 @@
 }
 
 .cardA {
-  top: 8%;
-  right: 0;
+  top: 6%;
+  right: 6%;
 }
 
 .cardB {
-  bottom: 12%;
-  left: 0;
+  bottom: 10%;
+  left: 4%;
 }
 
 .stripWrap {
   grid-column: 1 / -1;
-  padding-top: 0.25rem;
+  min-width: 0;
+  max-width: 100%;
+  padding-top: 0.15rem;
+}
+
+.dock {
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+  padding: 0.7rem 0.55rem 0.55rem;
+  border-radius: 1.6rem;
+  background: color-mix(in srgb, white 58%, transparent);
+  border: 1px solid color-mix(in srgb, white 70%, transparent);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, white 80%, transparent) inset,
+    0 16px 36px color-mix(in srgb, var(--color-charcoal) 8%, transparent);
+  backdrop-filter: blur(18px);
 }
 
 .stacked {
@@ -189,43 +285,102 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fadeCopy {
+  .fadeCopy,
+  .fadeNext p,
+  .fadeNext h1,
+  .fadeNext h2,
+  .fadePrev p,
+  .fadePrev h1,
+  .fadePrev h2,
+  .fadeCopy .actions {
     animation: none;
   }
 }
 
-@media (max-width: 899px) {
+@media (max-width: 1079px) {
   .layout {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-    align-content: start;
-    padding-block: 1rem 0.75rem;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-content: stretch;
+    gap: 0.75rem;
+    padding-block: calc(var(--header-height) + 1.15rem) 0.85rem;
   }
 
-  .visualColumn {
-    height: min(42vh, 18rem);
-    order: -1;
+  .dock {
+    width: 100%;
+  }
+
+  .copy {
+    max-width: none;
+  }
+
+  .tagline {
+    display: none;
+  }
+
+  .brand {
+    margin-bottom: 0.35rem;
   }
 
   .headline {
-    max-width: 12ch;
-    font-size: clamp(2.2rem, 10vw, 3.2rem);
+    max-width: 16ch;
+    margin-bottom: 0.45rem;
+    font-size: clamp(1.85rem, 4.6vw, 3rem);
   }
 
-  .ring {
-    width: 70vw;
-    height: 70vw;
-    top: 2%;
-    left: 50%;
-    transform: translateX(-50%);
+  .description {
+    margin-bottom: 0.7rem;
+    font-size: 0.95rem;
+    max-width: 46ch;
+  }
+
+  .visualColumn {
+    height: min(32vh, 16rem);
+    width: min(100%, 24rem);
+    max-width: 100%;
+    order: 0;
+    overflow: visible;
   }
 
   .cardA {
-    top: 0;
-    right: 0;
+    top: auto;
+    right: auto;
+    bottom: 0.25rem;
+    left: 0;
+    transform: none;
   }
 
   .cardB {
     display: none;
+  }
+
+  .floor {
+    bottom: 4%;
+    width: 72%;
+  }
+}
+
+@media (max-width: 720px) {
+  .headline {
+    font-size: clamp(1.7rem, 8vw, 2.35rem);
+  }
+
+  .description {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .actions {
+    gap: 0.5rem;
+  }
+
+  .visualColumn {
+    height: min(28vh, 13.5rem);
+    width: min(86%, 20rem);
+  }
+
+  .cardA {
+    transform: scale(0.92);
+    transform-origin: bottom left;
   }
 }

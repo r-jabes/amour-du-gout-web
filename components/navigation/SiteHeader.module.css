@@ -2,9 +2,24 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: blur(14px);
-  background: color-mix(in srgb, var(--color-cream) 86%, transparent);
+  background: color-mix(in srgb, var(--color-cream) 92%, transparent);
   border-bottom: var(--border-thin);
+  transition:
+    background-color 700ms var(--ease-out),
+    border-color 700ms var(--ease-out);
+}
+
+/* Homepage hero: the chapter colour continues through the navigation. */
+:global(html[data-hero="on"]) .header {
+  background:
+    radial-gradient(
+      ellipse 80% 140% at 62% 140%,
+      var(--hero-glow) 0%,
+      transparent 62%
+    ),
+    var(--hero-bg);
+  border-bottom-color: color-mix(in srgb, var(--color-charcoal) 8%, transparent);
+  backdrop-filter: none;
 }
 
 .inner {
@@ -26,7 +41,7 @@
   padding: 0.55rem 0.85rem;
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
-  color: var(--color-text-muted);
+  color: var(--color-charcoal);
   border-radius: var(--radius-sm);
   transition: color var(--duration-fast) var(--ease-out),
     background-color var(--duration-fast) var(--ease-out);
@@ -120,6 +135,7 @@
 
 .mobilePanelOpen {
   display: block;
+  background: var(--hero-bg, var(--color-cream));
 }
 
 .mobileNav {

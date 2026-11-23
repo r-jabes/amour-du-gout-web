@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 import type { StoryChapter } from "@/content/home-story";
 import styles from "./CategoryStrip.module.css";
 
@@ -13,8 +16,24 @@ export function CategoryStrip({
   activeIndex,
   onSelect,
 }: CategoryStripProps) {
+  const stripRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const strip = stripRef.current;
+    const active = strip?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (!strip || !active) return;
+    const left =
+      active.offsetLeft - strip.clientWidth / 2 + active.clientWidth / 2;
+    strip.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+  }, [activeIndex]);
+
   return (
-    <div className={styles.strip} role="tablist" aria-label="Category chapters">
+    <div
+      ref={stripRef}
+      className={styles.strip}
+      role="tablist"
+      aria-label="Category chapters"
+    >
       {chapters.map((chapter, index) => {
         const active = index === activeIndex;
         return (

@@ -5,12 +5,14 @@ import styles from "./ChapterProduct.module.css";
 type ChapterProductProps = {
   chapters: StoryChapter[];
   activeIndex: number;
+  direction?: "next" | "prev";
   priorityFirst?: boolean;
 };
 
 export function ChapterProduct({
   chapters,
   activeIndex,
+  direction = "next",
   priorityFirst = false,
 }: ChapterProductProps) {
   const active = chapters[activeIndex];
