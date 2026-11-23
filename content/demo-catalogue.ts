@@ -1,0 +1,98 @@
+/**
+ * Illustrative catalogue structure for the prototype.
+ * Product names and any future prices are DEMO ONLY — not the official menu.
+ * Expand in Phase 3; keep `demo: true` until the owner supplies real data.
+ */
+
+export type DemoCategoryId =
+  | "cakes"
+  | "fresh-bakes"
+  | "breakfast"
+  | "burgers-and-bites"
+  | "lunch"
+  | "desserts"
+  | "drinks";
+
+export type DemoCategory = {
+  id: DemoCategoryId;
+  label: string;
+  slug: string;
+  description: string;
+  heroImage: string;
+  editorialImage: string;
+};
+
+export type DemoProduct = {
+  id: string;
+  categoryId: DemoCategoryId;
+  name: string;
+  description: string;
+  image: string;
+  /** Always true until official menu confirmation. */
+  demo: true;
+};
+
+export const DEMO_DISCLAIMER =
+  "Menu items shown here are illustrative demonstration content, not the official Amour du Goût menu.";
+
+export const demoCategories: DemoCategory[] = [
+  {
+    id: "cakes",
+    label: "Cakes",
+    slug: "cakes",
+    description: "Celebration cakes and sweet centrepieces.",
+    heroImage: "/assets/hero/transparent-png/hero-strawberry-cake.webp",
+    editorialImage: "/assets/editorial/editorial-celebration-cake.png",
+  },
+  {
+    id: "fresh-bakes",
+    label: "Fresh Bakes",
+    slug: "fresh-bakes",
+    description: "Croissants, pastries and warm bakery favourites.",
+    heroImage: "/assets/hero/transparent-png/hero-croissant-main.webp",
+    editorialImage: "/assets/editorial/editorial-pastry-selection.png",
+  },
+  {
+    id: "breakfast",
+    label: "Breakfast",
+    slug: "breakfast",
+    description: "Mornings worth slowing down for.",
+    heroImage: "/assets/hero/transparent-png/hero-breakfast-platter.png",
+    editorialImage: "/assets/editorial/editorial-breakfast-spread.png",
+  },
+  {
+    id: "burgers-and-bites",
+    label: "Burgers & Bites",
+    slug: "burgers-and-bites",
+    description: "Satisfying savoury plates and bites.",
+    heroImage: "/assets/hero/transparent-png/hero-gourmet-burger.png",
+    editorialImage: "/assets/editorial/editorial-gourmet-burger.png",
+  },
+  {
+    id: "lunch",
+    label: "Lunch",
+    slug: "lunch",
+    description: "Plated meals, salads and sharing platters.",
+    heroImage: "/assets/hero/transparent-png/hero-lunch-platter.png",
+    editorialImage: "/assets/editorial/editorial-lunch-platter.png",
+  },
+  {
+    id: "desserts",
+    label: "Desserts",
+    slug: "desserts",
+    description: "Something sweet to finish the moment.",
+    heroImage: "/assets/hero/transparent-png/hero-cheesecake-slice.png",
+    editorialImage: "/assets/editorial/editorial-cheesecake-dessert.png",
+  },
+  {
+    id: "drinks",
+    label: "Drinks",
+    slug: "drinks",
+    description: "Coffee, iced drinks and café favourites.",
+    heroImage: "/assets/hero/transparent-png/hero-iced-coffee.png",
+    editorialImage: "/assets/editorial/editorial-coffee-moment.png",
+  },
+];
+
+/** Placeholder products — Phase 3 will flesh out browsing UI. */
+export const demoProducts: DemoProduct[] = [];

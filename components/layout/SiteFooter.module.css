@@ -1,0 +1,75 @@
+.footer {
+  margin-top: auto;
+  border-top: var(--border-thin);
+  background: var(--color-charcoal);
+  color: var(--color-cream-soft);
+  padding-block: var(--space-8) var(--space-6);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-7);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: var(--space-6);
+  }
+}
+
+.brandBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 28rem;
+}
+
+.intro {
+  color: color-mix(in srgb, var(--color-cream) 72%, transparent);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.heading {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: var(--space-4);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.link {
+  color: color-mix(in srgb, var(--color-cream) 85%, transparent);
+  font-size: var(--text-sm);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.link:hover {
+  color: var(--color-orange);
+}
+
+.meta {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid color-mix(in srgb, var(--color-cream) 12%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: color-mix(in srgb, var(--color-cream) 55%, transparent);
+}
+
+.disclaimer {
+  flex-basis: 100%;
+  max-width: 60ch;
+}

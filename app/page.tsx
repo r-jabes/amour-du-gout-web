@@ -1,69 +1,36 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { Container } from "@/components/layout/Container";
+import { Button } from "@/components/ui/Button";
+import { PageIntro } from "@/components/ui/PageIntro";
+import { Reveal } from "@/components/ui/Reveal";
+import { DEMO_DISCLAIMER } from "@/content/demo-catalogue";
+import { site } from "@/content/site";
+import { editorialAssets, heroAssets } from "@/lib/assets";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <Container>
+      <Reveal>
+        <PageIntro
+          eyebrow="Phase 1 foundation"
+          title="Amour du Goût"
+          lede={`${site.tagline} A premium bakery and café experience for Kigali — storytelling homepage arrives in Phase 2.`}
+          actions={
+            <>
+              <Button href="/menu" variant="primary">
+                Explore Our Menu
+              </Button>
+              <Button href="/about" variant="secondary">
+                Our Story
+              </Button>
+            </>
+          }
+          editorialSrc={editorialAssets.croissantTable}
+          editorialAlt="Golden croissant on a ceramic plate with coffee in soft morning light — prototype editorial photography"
+          heroSrc={heroAssets.croissantMain}
+          heroAlt="Isolated golden croissant with transparent background — prototype hero asset"
+          note={DEMO_DISCLAIMER}
         />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </Reveal>
+    </Container>
   );
 }
