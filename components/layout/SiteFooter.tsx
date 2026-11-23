@@ -31,13 +31,34 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h2 className={styles.heading}>Visit</h2>
+            <h2 className={styles.heading}>Menu</h2>
             <ul className={styles.list}>
-              {site.contact.addressLines.map((line) => (
-                <li key={line} className={styles.link}>
-                  {line}
+              {demoCategories.map((category) => (
+                <li key={category.id}>
+                  <Link
+                    href={`/menu#${category.id}`}
+                    className={styles.link}
+                  >
+                    {category.label}
+                  </Link>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className={styles.heading}>Visit</h2>
+            <ul className={styles.list}>
+              <li>
+                <a
+                  href={site.contact.mapsHref}
+                  className={styles.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {site.contact.addressLines.join(", ")}
+                </a>
+              </li>
               <li>
                 <a href={site.contact.phoneHref} className={styles.link}>
                   {site.contact.phoneDisplay}
@@ -60,14 +81,6 @@ export function SiteFooter() {
         <div className={styles.meta}>
           <p>
             © {site.name}. All rights reserved.
-          </p>
-          <p>
-            Categories preview:{" "}
-            {demoCategories
-              .slice(0, 4)
-              .map((category) => category.label)
-              .join(" · ")}
-            …
           </p>
           <p className={styles.disclaimer}>
             Contact details are taken from the public Instagram profile and

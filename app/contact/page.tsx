@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 import { PageIntro } from "@/components/ui/PageIntro";
-import { site } from "@/content/site";
-import { editorialAssets, heroAssets } from "@/lib/assets";
+import { site, whatsappLink } from "@/content/site";
+import { editorialAssets } from "@/lib/assets";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -17,14 +17,14 @@ export default function ContactPage() {
       <PageIntro
         eyebrow="Contact"
         title="Say hello"
-        lede="Reach Amour du Goût using the public contact details observed from Instagram. Opening hours and ordering policies will be added once confirmed."
+        lede="Questions, orders or a celebration cake in mind? The quickest way to reach us is a call or a WhatsApp message."
         actions={
           <>
             <Button href={site.contact.phoneHref} variant="primary">
               Call {site.contact.phoneDisplay}
             </Button>
             <Button
-              href={site.contact.whatsappHref}
+              href={whatsappLink(`Hello ${site.name}!`)}
               variant="secondary"
               target="_blank"
               rel="noopener noreferrer"
@@ -35,8 +35,6 @@ export default function ContactPage() {
         }
         editorialSrc={editorialAssets.breakfastSpread}
         editorialAlt="Breakfast spread with eggs, fruit and coffee — prototype editorial photography"
-        heroSrc={heroAssets.icedCoffee}
-        heroAlt="Iced coffee glass with transparent background — prototype hero asset"
         note="Phone and address remain pending owner confirmation before production use."
       />
 
@@ -54,13 +52,36 @@ export default function ContactPage() {
             </dd>
           </div>
           <div>
+            <dt>WhatsApp</dt>
+            <dd>
+              <a
+                className="text-link"
+                href={whatsappLink(`Hello ${site.name}!`)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Message us
+              </a>
+            </dd>
+          </div>
+          <div>
             <dt>Address</dt>
             <dd>
-              {site.contact.addressLines.map((line) => (
-                <span key={line} className={styles.line}>
-                  {line}
-                </span>
-              ))}
+              <address className={styles.address}>
+                {site.contact.addressLines.map((line) => (
+                  <span key={line} className={styles.line}>
+                    {line}
+                  </span>
+                ))}
+              </address>
+              <a
+                className={`text-link ${styles.directions}`}
+                href={site.contact.mapsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Get directions
+              </a>
             </dd>
           </div>
           <div>
@@ -78,7 +99,13 @@ export default function ContactPage() {
           </div>
           <div>
             <dt>Opening hours</dt>
-            <dd>To be confirmed with the owner.</dd>
+            <dd>
+              Coming soon —{" "}
+              <a className="text-link" href={site.contact.phoneHref}>
+                call ahead
+              </a>{" "}
+              to check we’re open.
+            </dd>
           </div>
         </dl>
       </section>

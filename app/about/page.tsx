@@ -16,7 +16,7 @@ export default function AboutPage() {
       <PageIntro
         eyebrow="Our Story"
         title={site.tagline}
-        lede="Amour du Goût brings together fresh bakes, coffee, breakfast, burgers, lunch and desserts in a warm Kigali space. A fuller editorial story will land in Phase 4 — without invented history or awards."
+        lede="Amour du Goût brings together fresh bakes, coffee, breakfast, burgers, lunch and desserts in a warm Kigali space — a place to slow down, celebrate, and share something good."
         actions={
           <>
             <Button href="/menu" variant="primary">

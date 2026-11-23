@@ -10,7 +10,31 @@
 .list {
   display: grid;
   gap: var(--space-5);
-  max-width: 36rem;
+  max-width: 48rem;
+}
+
+@media (min-width: 640px) {
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+}
+
+.list > div {
+  padding: var(--space-5);
+  border: var(--border-thin);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-white) 55%, transparent);
+}
+
+.address {
+  font-style: normal;
+}
+
+.directions {
+  display: inline-block;
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
 }
 
 .list dt {
