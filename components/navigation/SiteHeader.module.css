@@ -1,8 +1,23 @@
+/*
+ * The header paints its surface on ::before rather than on itself. A
+ * backdrop-filter on .header would turn it into the containing block for
+ * the fixed full-screen overlay below, trapping the overlay inside the bar.
+ */
 .header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--color-cream) 92%, transparent);
+  isolation: isolate;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: color-mix(in srgb, var(--color-cream) 88%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
   border-bottom: var(--border-thin);
   transition:
     background-color 700ms var(--ease-out),
@@ -10,7 +25,7 @@
 }
 
 /* Homepage hero: the chapter colour continues through the navigation. */
-:global(html[data-hero="on"]) .header {
+:global(html[data-hero="on"]) .header::before {
   background:
     radial-gradient(
       ellipse 80% 140% at 62% 140%,
@@ -20,6 +35,10 @@
     var(--hero-bg);
   border-bottom-color: color-mix(in srgb, var(--color-charcoal) 8%, transparent);
   backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  /* --hero-bg is already scroll-driven; a transition here would make the
+     header trail the stage colour. */
+  transition: none;
 }
 
 .inner {
@@ -30,135 +49,458 @@
   min-height: var(--header-height);
 }
 
+/* ---------- Desktop: links in a frosted pill ---------- */
+
 .nav {
+  position: relative;
   display: none;
   align-items: center;
-  gap: var(--space-1);
+  gap: 0.15rem;
+  padding: 0.3rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-white) 42%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-white) 65%, transparent);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-white) 70%, transparent) inset,
+    0 6px 20px color-mix(in srgb, var(--color-charcoal) 6%, transparent);
+}
+
+/* Sliding highlights: --x / --w are set from the target link's box. */
+.navPill,
+.navGhost {
+  position: absolute;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 0;
+  width: var(--w, 0px);
+  transform: translateX(var(--x, 0px));
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+}
+
+.navPill {
+  z-index: 1;
+  background: var(--color-white);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-charcoal) 10%, transparent);
+}
+
+.navGhost {
+  z-index: 0;
+  opacity: 0;
+  background: color-mix(in srgb, var(--color-white) 55%, transparent);
+  transition: opacity 180ms var(--ease-out);
+}
+
+.navGhost[data-visible] {
+  opacity: 1;
+}
+
+.navPill[data-ready] {
+  transition:
+    transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 460ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms var(--ease-out);
+}
+
+.navGhost[data-ready] {
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms var(--ease-out);
 }
 
 .navLink {
   position: relative;
-  padding: 0.55rem 0.85rem;
+  z-index: 2;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
-  color: var(--color-charcoal);
-  border-radius: var(--radius-sm);
-  transition: color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
+  color: color-mix(in srgb, var(--color-charcoal) 72%, transparent);
+  transition: color 260ms var(--ease-out);
 }
 
-.navLink:hover {
-  color: var(--color-charcoal);
-  background: color-mix(in srgb, var(--color-sand) 35%, transparent);
-}
-
+.navLink:hover,
 .navLinkActive {
   color: var(--color-charcoal);
-}
-
-.navLinkActive::after {
-  content: "";
-  position: absolute;
-  left: 0.85rem;
-  right: 0.85rem;
-  bottom: 0.2rem;
-  height: 2px;
-  background: var(--color-orange);
-  border-radius: var(--radius-pill);
 }
 
 .actions {
   display: none;
   align-items: center;
-  gap: var(--space-3);
 }
+
+.cta {
+  border-radius: var(--radius-pill);
+  padding-inline: 1.35rem 1.1rem;
+}
+
+.ctaArrow {
+  display: inline-block;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.cta:hover .ctaArrow {
+  transform: translateX(3px);
+}
+
+/* ---------- Mobile toggle ---------- */
 
 .menuToggle {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 2.75rem;
+  gap: 0.6rem;
   height: 2.75rem;
-  border: var(--border-thin);
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--color-white) 60%, transparent);
-  cursor: pointer;
-}
-
-.menuToggle span,
-.menuToggle span::before,
-.menuToggle span::after {
-  display: block;
-  width: 1.1rem;
-  height: 2px;
-  background: var(--color-charcoal);
+  padding: 0 0.55rem 0 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-charcoal) 12%, transparent);
   border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-white) 55%, transparent);
+  color: var(--color-charcoal);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out);
+}
+
+.toggleText {
+  min-width: 2.6rem;
+  text-align: left;
+}
+
+.toggleIcon {
   position: relative;
-  transition: transform var(--duration-base) var(--ease-out),
-    opacity var(--duration-fast) var(--ease-out);
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--color-charcoal);
+  transition: background-color var(--duration-base) var(--ease-out);
 }
 
-.menuToggle span::before,
-.menuToggle span::after {
-  content: "";
+.toggleIcon span {
   position: absolute;
-  left: 0;
+  width: 0.85rem;
+  height: 1.5px;
+  border-radius: var(--radius-pill);
+  background: var(--color-cream-soft);
+  transition:
+    transform 420ms var(--ease-out),
+    width 420ms var(--ease-out),
+    background-color var(--duration-base) var(--ease-out);
 }
 
-.menuToggle span::before {
-  top: -6px;
+.toggleIcon span:first-child {
+  transform: translateY(-3px);
 }
 
-.menuToggle span::after {
-  top: 6px;
+.toggleIcon span:last-child {
+  width: 0.55rem;
+  transform: translate(-0.15rem, 3px);
 }
 
-.menuToggleOpen span {
-  background: transparent;
+.menuToggleOpen {
+  background: color-mix(in srgb, var(--color-white) 10%, transparent);
+  border-color: color-mix(in srgb, var(--color-white) 18%, transparent);
+  color: var(--color-cream-soft);
 }
 
-.menuToggleOpen span::before {
-  top: 0;
+.menuToggleOpen .toggleIcon {
+  background: var(--color-orange);
+}
+
+.menuToggleOpen .toggleIcon span:first-child {
   transform: rotate(45deg);
 }
 
-.menuToggleOpen span::after {
-  top: 0;
+.menuToggleOpen .toggleIcon span:last-child {
+  width: 0.85rem;
   transform: rotate(-45deg);
 }
 
-.mobilePanel {
-  display: none;
-  border-top: var(--border-thin);
-  padding-block: var(--space-4) var(--space-5);
+/* ---------- Mobile full-screen overlay ---------- */
+
+/* Header surface fades once the circular reveal has covered it, so the
+   bar and overlay read as one canvas. (Specificity beats the hero rule.) */
+:global(html) .header.headerOpen::before {
+  opacity: 0;
+  transition: opacity 160ms linear 260ms;
 }
 
-.mobilePanelOpen {
-  display: block;
-  background: var(--hero-bg, var(--color-cream));
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--color-cream-soft);
+  background: var(--color-charcoal);
+  visibility: hidden;
+  clip-path: circle(0% at calc(100% - 2.75rem) 2.25rem);
+  transition:
+    clip-path 620ms cubic-bezier(0.7, 0, 0.2, 1),
+    visibility 0s linear 620ms;
 }
 
-.mobileNav {
+.overlayOpen {
+  visibility: visible;
+  clip-path: circle(150% at calc(100% - 2.75rem) 2.25rem);
+  transition:
+    clip-path 720ms cubic-bezier(0.7, 0, 0.2, 1),
+    visibility 0s;
+}
+
+.overlayGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 70% 45% at 100% 0%,
+      color-mix(in srgb, var(--color-orange) 30%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 80% 50% at 0% 100%,
+      color-mix(in srgb, var(--color-brown) 55%, transparent),
+      transparent 70%
+    );
+}
+
+.overlayInner {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-6);
+  min-height: 100%;
+  padding: calc(var(--header-height) + var(--space-5)) var(--gutter)
+    max(var(--space-6), env(safe-area-inset-bottom));
 }
 
-.mobileLink {
-  padding: 0.85rem 0.5rem;
-  font-size: var(--text-md);
+/* Staggered entrance. Each piece sets --d (its order). */
+.menuItem {
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-cream) 10%, transparent);
+}
+
+.menuLink,
+.reveal {
+  opacity: 0;
+  transform: translateY(110%);
+  transition:
+    opacity 300ms var(--ease-out),
+    transform 300ms var(--ease-out);
+}
+
+.reveal {
+  transform: translateY(1.25rem);
+}
+
+.overlayOpen .menuLink,
+.overlayOpen .reveal {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 600ms var(--ease-out),
+    transform 700ms var(--ease-out);
+  transition-delay: calc(220ms + var(--d, 0) * 70ms);
+}
+
+.menuList {
+  display: grid;
+}
+
+.menuLink {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding-block: 0.7rem;
+  color: var(--color-cream-soft);
+}
+
+.menuIndex {
+  flex: none;
+  width: 1.6rem;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-cream) 45%, transparent);
+}
+
+.menuLabel {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 11vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out);
+}
+
+.menuArrow {
+  margin-left: auto;
+  align-self: center;
+  font-size: var(--text-xl);
+  color: var(--color-orange);
+  opacity: 0;
+  transform: translateX(-0.5rem);
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.menuLink:hover .menuLabel,
+.menuLink:focus-visible .menuLabel {
+  transform: translateX(0.35rem);
+  font-style: italic;
+}
+
+.menuLink:hover .menuArrow,
+.menuLink:focus-visible .menuArrow,
+.menuLinkActive .menuArrow {
+  opacity: 1;
+  transform: none;
+}
+
+.menuLinkActive .menuLabel,
+.menuLinkActive .menuIndex {
+  color: var(--color-orange);
+}
+
+.menuLink:focus-visible {
+  outline: none;
+}
+
+.menuLink:focus-visible .menuLabel {
+  text-decoration: underline;
+  text-decoration-color: var(--color-orange);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.15em;
+}
+
+.sectionLabel {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-cream) 55%, transparent);
+}
+
+.categoryRow {
+  display: flex;
+  gap: var(--space-3);
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+}
+
+.categoryRow::-webkit-scrollbar {
+  display: none;
+}
+
+.categoryCard {
+  display: grid;
+  justify-items: center;
+  gap: 0.45rem;
+  width: 4.75rem;
+  scroll-snap-align: start;
+}
+
+.categoryThumb {
+  position: relative;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 1.1rem;
+  background: color-mix(in srgb, var(--color-cream) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-cream) 14%, transparent);
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out);
+}
+
+.categoryThumb img {
+  object-fit: contain;
+  padding: 0.4rem;
+}
+
+.categoryCard:hover .categoryThumb,
+.categoryCard:focus-visible .categoryThumb {
+  transform: translateY(-2px);
+  border-color: var(--color-orange);
+}
+
+.categoryName {
+  font-size: 0.68rem;
   font-weight: var(--weight-medium);
-  color: var(--color-charcoal);
-  border-radius: var(--radius-sm);
+  text-align: center;
+  line-height: 1.2;
+  color: color-mix(in srgb, var(--color-cream) 80%, transparent);
 }
 
-.mobileLink:hover,
-.mobileLinkActive {
-  background: color-mix(in srgb, var(--color-sand) 40%, transparent);
+.menuActions {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: auto;
 }
 
-.mobileCta {
-  margin-top: var(--space-4);
+.menuActions > a:first-child {
+  min-height: 3.25rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-base);
+}
+
+.quickActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.quick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--color-cream) 22%, transparent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-cream-soft);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.quick:hover {
+  background: color-mix(in srgb, var(--color-cream) 8%, transparent);
+  border-color: color-mix(in srgb, var(--color-cream) 40%, transparent);
+}
+
+.menuMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid color-mix(in srgb, var(--color-cream) 10%, transparent);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  color: color-mix(in srgb, var(--color-cream) 55%, transparent);
+}
+
+.menuMeta a:hover {
+  color: var(--color-orange);
 }
 
 @media (min-width: 900px) {
@@ -168,8 +510,26 @@
   }
 
   .menuToggle,
-  .mobilePanel,
-  .mobilePanelOpen {
+  .overlay {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navPill[data-ready],
+  .navGhost[data-ready] {
+    transition: opacity 120ms linear;
+  }
+
+  .overlay,
+  .overlayOpen {
+    clip-path: none;
+    transition: visibility 0s;
+  }
+
+  .menuLink,
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }
