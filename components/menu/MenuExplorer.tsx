@@ -12,9 +12,10 @@ import {
   formatMenuPrice,
   MENU_NOTE,
   menuSections,
+  type MenuItem,
   type MenuSection,
 } from "@/content/menu-catalogue";
-import { site, whatsappLink } from "@/content/site";
+import { useCart } from "@/lib/cart";
 import styles from "./MenuExplorer.module.css";
 
 function filterSections(query: string): MenuSection[] {
@@ -30,6 +31,60 @@ function filterSections(query: string): MenuSection[] {
       return { ...section, items };
     })
     .filter((section) => section.items.length > 0);
+}
+
+function ItemActions({
+  item,
+  sectionLabel,
+}: {
+  item: MenuItem;
+  sectionLabel: string;
+}) {
+  const { addItem, getQuantity, setQuantity } = useCart();
+  const quantity = getQuantity(item.id);
+
+  if (quantity === 0) {
+    return (
+      <button
+        type="button"
+        className={styles.addButton}
+        onClick={() =>
+          addItem({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            sectionLabel,
+          })
+        }
+      >
+        Add to order
+      </button>
+    );
+  }
+
+  return (
+    <div className={styles.stepper}>
+      <button
+        type="button"
+        className={styles.stepButton}
+        aria-label={`Decrease ${item.name}`}
+        onClick={() => setQuantity(item.id, quantity - 1)}
+      >
+        −
+      </button>
+      <span className={styles.qty} aria-live="polite">
+        {quantity}
+      </span>
+      <button
+        type="button"
+        className={styles.stepButton}
+        aria-label={`Increase ${item.name}`}
+        onClick={() => setQuantity(item.id, quantity + 1)}
+      >
+        +
+      </button>
+    </div>
+  );
 }
 
 export function MenuExplorer() {
@@ -192,16 +247,7 @@ export function MenuExplorer() {
                       <p className={styles.description}>{item.description}</p>
                     ) : null}
                     <div className={styles.itemActions}>
-                      <a
-                        className={styles.askLink}
-                        href={whatsappLink(
-                          `Hello ${site.name}! I'd like to order: ${item.name} (${formatMenuPrice(item.price)}).`,
-                        )}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Order on WhatsApp
-                      </a>
+                      <ItemActions item={item} sectionLabel={section.label} />
                     </div>
                   </li>
                 ))}

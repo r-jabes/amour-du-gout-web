@@ -1,5 +1,5 @@
 .explorer {
-  padding-bottom: var(--space-9);
+  padding-bottom: calc(var(--space-9) + 4.5rem);
 }
 
 .toolbar {
@@ -125,7 +125,7 @@
 }
 
 .section {
-  scroll-margin-top: calc(var(--header-height) + 7.5rem);
+  scroll-margin-top: calc(var(--header-height) + 8.5rem);
 }
 
 .sectionHead {
@@ -200,20 +200,65 @@
 .itemActions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem;
-  margin-top: 0.15rem;
+  margin-top: 0.35rem;
 }
 
-.askLink {
-  font-size: 0.78rem;
-  font-weight: var(--weight-medium);
+.addButton {
+  min-height: 2.15rem;
+  padding: 0.4rem 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--color-orange) 55%, transparent);
+  border-radius: var(--radius-pill);
+  background: transparent;
   color: var(--color-orange);
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
+  font-size: 0.8rem;
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
 }
 
-.askLink:hover {
-  color: var(--color-accent-hover);
+.addButton:hover {
+  background: var(--color-orange);
+  border-color: var(--color-orange);
+  color: var(--color-white);
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem;
+  border: 1px solid color-mix(in srgb, var(--color-brown) 22%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-white) 70%, transparent);
+}
+
+.stepButton {
+  width: 1.85rem;
+  height: 1.85rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-charcoal);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.stepButton:hover {
+  background: color-mix(in srgb, var(--color-orange) 16%, transparent);
+  color: var(--color-orange);
+}
+
+.qty {
+  min-width: 1.35rem;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: var(--weight-medium);
 }
 
 .empty {
